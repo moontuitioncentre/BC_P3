@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 
 <head>
 
@@ -1607,15 +1607,14 @@ font-weight:bold;
 
 <select id="studentGrade" onchange="loadStudents()">
 
-<option value="">
-请选择年级
-</option>
-
-<option value="Year 1">
-Year 1
-</option>
-
-</select>
+<option value="">请选择年级</option>
+        <option value="Year 1">Year 1</option>
+        <option value="Year 2">Year 2</option>
+        <option value="Year 3">Year 3</option>
+	<option value="Year 4">Year 4</option>
+	<option value="Year 5">Year 5</option>
+	<option value="Year 6">Year 6</option>
+    </select>
 
 
 <br>
@@ -1829,297 +1828,111 @@ window.limit = limit;
 
 <script>
 
-const SUBJECT = "Chinese";
+const SUBJECT = "English";
 const TEST_TYPE = "Reading";
 
 // 第2部分 JavaScript 会接这里
 const originalWords = [
-"不要",
-  "对吗",
-  "我和你",
-  "地方",
-  "没有",
-  "采花",
-  "骂人",
-  "白色",
-  "它们",
-  "被子",
-  "很多",
-  "不对",
-  "把手",
-  "中间",
-  "以后",
-  "以及",
-  "只有",
-  "就是",
-  "折纸",
-  "登山",
-  "等待",
-  "他们",
-  "其他",
-  "出去",
-  "变化",
-  "如果",
-  "生日",
-  "更加",
-  "最好",
-  "爱心",
-  "牛奶",
-  "至少",
-  "都是",
-  "丢掉",
-  "分开",
-  "动物",
-  "又是",
-  "口水",
-  "句子",
-  "填写",
-  "天空",
-  "广大",
-  "手心",
-  "放下",
-  "时间",
-  "水桶",
-  "大海",
-  "动物",
-  "小狗",
-  "国王",
-  "笑话",
-  "关系",
-  "给你",
-  "颜色",
-  "落下",
-  "要求",
-  "说话",
-  "这里",
-  "部分",
-  "飞机",
-  "高山",
-  "万一",
-  "下面",
-  "主人",
-  "之后",
-  "书本",
-  "五个",
-  "一件",
-  "例子",
-  "依靠",
-  "进入",
-  "农民",
-  "勾住",
-  "华文",
-  "发现",
-  "取名",
-  "呼吸",
-  "唐人",
-  "啼哭",
-  "土地",
-  "奥运",
-  "奶奶",
-  "她们",
-  "家人",
-  "尽力",
-  "平安",
-  "商店",
-  "当时",
-  "形状",
-  "必须",
-  "房子",
-  "人才",
-  "掉下",
-  "提问",
-  "断开",
-  "方向",
-  "星星",
-  "风景",
-  "木头",
-  "一朵",
-  "做梦",
-  "欲望",
-  "流水",
-  "涣散",
-  "滑倒",
-  "一点",
-  "狠心",
-  "玩耍",
-  "有用",
-  "田地",
-  "目光",
-  "离开",
-  "贫穷",
-  "铅笔",
-  "一篇",
-  "精彩",
-  "白纸",
-  "小组",
-  "一群",
-  "联系",
-  "草地",
-  "蜜蜂",
-  "牛角",
-  "计算",
-  "请问",
-  "赶快",
-  "马路",
-  "身体",
-  "辨认",
-  "远方",
-  "中间",
-  "吃饭",
-  "首先",
-  "长大",
-  "小猴",
-  "跟着",
-  "什么",
-  "第二",
-  "二十",
-  "学生",
-  "树枝",
-  "觉得",
-  "我也",
-  "词语",
-  "课文",
-  "公鸡",
-  "妈妈",
-  "美丽",
-  "单元",
-  "说说",
-  "根据",
-  "问题",
-  "回答",
-  "阅读",
-  "十二",
-  "睡觉",
-  "爸爸",
-  "知道",
-  "公园",
-  "垃圾",
-  "两个",
-  "哪些",
-  "圈出",
-  "正确",
-  "我的",
-  "名字",
-  "苹果",
-  "擦伤",
-  "起来",
-  "孩子",
-  "是谁",
-  "院子",
-  "理解",
-  "生字",
-  "男孩",
-  "完成",
-  "读音",
-  "表达",
-  "教材",
-  "培养",
-  "听说",
-  "怎样",
-  "吵醒",
-  "自己",
-  "指示",
-  "来了",
-  "百花",
-  "干净",
-  "爸妈",
-  "你会",
-  "识字",
-  "感受",
-  "父母",
-  "做过",
-  "鹳雀",
-  "进行",
-  "接龙",
-  "小猫",
-  "事情",
-  "你们",
-  "答案",
-  "然后",
-  "评估",
-  "情感",
-  "并能",
-  "早上",
-  "叫声",
-  "午后",
-  "看到",
-  "爬上",
-  "好痛",
-  "看图",
-  "内容",
-  "想法",
-  "山林",
-  "张大",
-  "嘴巴",
-  "可是",
-  "果皮",
-  "破坏",
-  "看见",
-  "积水",
-  "清洗",
-  "学着",
-  "四周",
-  "本文",
-  "通过",
-  "让你",
-  "教学",
-  "说明",
-  "马上",
-  "作者",
-  "学习",
-  "比较",
-  "洗衣",
-  "衣服",
-  "服从",
-  "同学",
-  "黄河",
-  "千里",
-  "一层",
-  "引导",
-  "诗人",
-  "错在",
-  "因为",
-  "站在",
-  "那里",
-  "大婶",
-  "生气",
-  "东西",
-  "上午",
-  "打扫",
-  "汉字",
-  "花园",
-  "相同",
-  "好奇",
-  "午觉",
-  "叫我",
-  "认为",
-  "开心",
-  "检查",
-  "选出",
-  "写在",
-  "喜欢",
-  "回乡",
-  "语感",
-  "展开",
-  "想象",
-  "初步",
-  "体验",
-  "文章",
-  "领会",
-  "教育",
-  "意义",
-  "语言",
-  "优美",
-  "习惯",
-  "认识",
-  "为什么",
-  "写一写",
-  "拾起来",
-  "说一说",
-  "一层楼",
-  "难为情",
-  "读一读",
-  "想一想"
+"got",
+"and",
+"have",
+"i've",
+"in",
+"we",
+"my",
+"any",
+"pizza",
+"apple",
+"like",
+"you",
+"look",
+"haven't",
+"basket",
+"on",
+"sandwich",
+"an",
+"chicken",
+"food",
+"listen",
+"write",
+"banana",
+"cake",
+"carrots",
+"at",
+"peas",
+"apples",
+"are",
+"sausages",
+"fruit",
+"no",
+"to",
+"grow",
+"list",
+"or",
+"pictures",
+"shopping",
+"what",
+"cheese",
+"favourite",
+"has",
+"read",
+"sausage",
+"your",
+"milk",
+"say",
+"vegetables",
+"with",
+"bananas",
+"for",
+"sorry",
+"words",
+"don't",
+"steak",
+"carrot",
+"day",
+"match",
+"onions",
+"please",
+"they",
+"think",
+"answer",
+"buy",
+"draw",
+"ground",
+"of",
+"orange",
+"would",
+"yes",
+"correct",
+"cut",
+"fried",
+"is",
+"juice",
+"lunch",
+"lunchtime",
+"mum",
+"numbers",
+"picture",
+"potatoes",
+"tomatoes",
+"trees",
+"do",
+"fill",
+"help",
+"out",
+"piece",
+"blanks",
+"circle",
+"colour",
+"corn",
+"dislikes",
+"find",
+"focus",
+"hot",
+"how",
+"it",
+"kitchen",
+"make"
 ];
 
 const students = {
@@ -2132,297 +1945,161 @@ const students = {
 "Candy",
 "Shannon",
 "Jayden Liew"
+],
+
+"Year 2":[
+"Laynarose",
+        "Ong Zhi Cong",
+        "Madihah",
+	"Alston"
+],
+
+"Year 3":[
+"Gracelyn",
+        "Eyrina",
+        "Averlyn",
+	"Adrieal",
+	"Ryan Chin",
+	"Renee"
+],
+
+"Year 4":[
+"王紫萱",
+        "Hilary",
+        "Ernest",
+	"Joanna",
+	"Shannie",
+	"Gavriil",
+	"Abigail", 		
+"Amira",
+"Jayden Lai",
+"Manfred",
+"Alinnah",
+"Megan",
+"Medina",
+"Adison",
+"Raphael"
+],
+
+"Year 5":[
+"Jovana",
+        "Anson",
+        "Althea",
+	"Muqri",
+	"Richie",
+	"Corey",
+	"Keefe",
+"Quenice"
+],
+
+"Year 6":[
+"Rowell",
+"张嘉欣"
 ]
 
 };
 
 const phrases = [
-"不要",
-  "对吗",
-  "我和你",
-  "地方",
-  "没有",
-  "采花",
-  "骂人",
-  "白色",
-  "它们",
-  "被子",
-  "很多",
-  "不对",
-  "把手",
-  "中间",
-  "以后",
-  "以及",
-  "只有",
-  "就是",
-  "折纸",
-  "登山",
-  "等待",
-  "他们",
-  "其他",
-  "出去",
-  "变化",
-  "如果",
-  "生日",
-  "更加",
-  "最好",
-  "爱心",
-  "牛奶",
-  "至少",
-  "都是",
-  "丢掉",
-  "分开",
-  "动物",
-  "又是",
-  "口水",
-  "句子",
-  "填写",
-  "天空",
-  "广大",
-  "手心",
-  "放下",
-  "时间",
-  "水桶",
-  "大海",
-  "动物",
-  "小狗",
-  "国王",
-  "笑话",
-  "关系",
-  "给你",
-  "颜色",
-  "落下",
-  "要求",
-  "说话",
-  "这里",
-  "部分",
-  "飞机",
-  "高山",
-  "万一",
-  "下面",
-  "主人",
-  "之后",
-  "书本",
-  "五个",
-  "一件",
-  "例子",
-  "依靠",
-  "进入",
-  "农民",
-  "勾住",
-  "华文",
-  "发现",
-  "取名",
-  "呼吸",
-  "唐人",
-  "啼哭",
-  "土地",
-  "奥运",
-  "奶奶",
-  "她们",
-  "家人",
-  "尽力",
-  "平安",
-  "商店",
-  "当时",
-  "形状",
-  "必须",
-  "房子",
-  "人才",
-  "掉下",
-  "提问",
-  "断开",
-  "方向",
-  "星星",
-  "风景",
-  "木头",
-  "一朵",
-  "做梦",
-  "欲望",
-  "流水",
-  "涣散",
-  "滑倒",
-  "一点",
-  "狠心",
-  "玩耍",
-  "有用",
-  "田地",
-  "目光",
-  "离开",
-  "贫穷",
-  "铅笔",
-  "一篇",
-  "精彩",
-  "白纸",
-  "小组",
-  "一群",
-  "联系",
-  "草地",
-  "蜜蜂",
-  "牛角",
-  "计算",
-  "请问",
-  "赶快",
-  "马路",
-  "身体",
-  "辨认",
-  "远方",
-  "中间",
-  "吃饭",
-  "首先",
-  "长大",
-  "小猴",
-  "跟着",
-  "什么",
-  "第二",
-  "二十",
-  "学生",
-  "树枝",
-  "觉得",
-  "我也",
-  "词语",
-  "课文",
-  "公鸡",
-  "妈妈",
-  "美丽",
-  "单元",
-  "说说",
-  "根据",
-  "问题",
-  "回答",
-  "阅读",
-  "十二",
-  "睡觉",
-  "爸爸",
-  "知道",
-  "公园",
-  "垃圾",
-  "两个",
-  "哪些",
-  "圈出",
-  "正确",
-  "我的",
-  "名字",
-  "苹果",
-  "擦伤",
-  "起来",
-  "孩子",
-  "是谁",
-  "院子",
-  "理解",
-  "生字",
-  "男孩",
-  "完成",
-  "读音",
-  "表达",
-  "教材",
-  "培养",
-  "听说",
-  "怎样",
-  "吵醒",
-  "自己",
-  "指示",
-  "来了",
-  "百花",
-  "干净",
-  "爸妈",
-  "你会",
-  "识字",
-  "感受",
-  "父母",
-  "做过",
-  "鹳雀",
-  "进行",
-  "接龙",
-  "小猫",
-  "事情",
-  "你们",
-  "答案",
-  "然后",
-  "评估",
-  "情感",
-  "并能",
-  "早上",
-  "叫声",
-  "午后",
-  "看到",
-  "爬上",
-  "好痛",
-  "看图",
-  "内容",
-  "想法",
-  "山林",
-  "张大",
-  "嘴巴",
-  "可是",
-  "果皮",
-  "破坏",
-  "看见",
-  "积水",
-  "清洗",
-  "学着",
-  "四周",
-  "本文",
-  "通过",
-  "让你",
-  "教学",
-  "说明",
-  "马上",
-  "作者",
-  "学习",
-  "比较",
-  "洗衣",
-  "衣服",
-  "服从",
-  "同学",
-  "黄河",
-  "千里",
-  "一层",
-  "引导",
-  "诗人",
-  "错在",
-  "因为",
-  "站在",
-  "那里",
-  "大婶",
-  "生气",
-  "东西",
-  "上午",
-  "打扫",
-  "汉字",
-  "花园",
-  "相同",
-  "好奇",
-  "午觉",
-  "叫我",
-  "认为",
-  "开心",
-  "检查",
-  "选出",
-  "写在",
-  "喜欢",
-  "回乡",
-  "语感",
-  "展开",
-  "想象",
-  "初步",
-  "体验",
-  "文章",
-  "领会",
-  "教育",
-  "意义",
-  "语言",
-  "优美",
-  "习惯",
-  "认识",
-  "为什么",
-  "写一写",
-  "拾起来",
-  "说一说",
-  "一层楼",
-  "难为情",
-  "读一读",
-  "想一想"  
+"I got it",
+    "you and me",
+    "I have one",
+    "I've seen it",
+    "in the box",
+    "we are here",
+    "it's my turn",
+    "any questions",
+    "let's eat pizza",
+    "eat an apple",
+    "I like it",
+    "you are here",
+    "look at me",
+    "I haven't got",
+    "in the basket",
+    "on the table",
+    "eat a sandwich",
+    "an apple",
+    "cook the chicken",
+    "eat your food",
+    "listen to me",
+    "write it down",
+    "a banana",
+    "bake a cake",
+    "eat your carrots",
+    "at home",
+    "i like to eat peas",
+    "eat the apples",
+    "we are ready",
+    "cook the sausages",
+    "eat some fruit",
+    "no thanks",
+    "go to school",
+    "grow it",
+    "make a list",
+    "now or later",
+    "draw pictures",
+    "go shopping",
+    "what is it",
+    "cheese please",
+    "my favourite food",
+    "she has one",
+    "read the book",
+    "a sausage",
+    "your turn",
+    "drink your milk",
+    "say it again",
+    "eat vegetables",
+    "with me",
+    "buy bananas",
+    "for you",
+    "I'm sorry",
+    "learn the words",
+    "don't do it",
+    "cook the steak",
+    "a carrot",
+    "have a good day",
+    "match them",
+    "chop the onions",
+    "please help me",
+    "they are here",
+    "I think so",
+    "answer me",
+    "buy it",
+    "draw a picture",
+    "on the ground",
+    "a piece of",
+    "eat an orange",
+    "I would like",
+    "yes please",
+    "that's correct",
+    "cut it",
+    "fried egg",
+    "it is here",
+    "drink juice",
+    "eat lunch",
+    "it's lunchtime",
+    "yes mum",
+    "count the numbers",
+    "take a picture",
+    "mash the potatoes",
+    "eat tomatoes",
+    "climb trees",
+    "do it now",
+    "fill it in",
+    "help me please",
+    "go out",
+    "a piece of",
+    "fill the blanks",
+    "circle it",
+    "colour it in",
+    "sweet corn",
+    "he dislikes it",
+    "find it",
+    "focus on it",
+    "it's hot",
+    "how are you",
+    "it is",
+    "in the kitchen",
+    "make it"
 ];
 
 let words = [];
@@ -2468,7 +2145,7 @@ let currentStudentName = "";
 
 let currentStudentGrade = "";
 
-let currentTestName = "BC_P1_Reading_Set 1";
+let currentTestName = "BI_P1_Reading_Set 1";
 
 function getTestID(){
 
@@ -3093,7 +2770,7 @@ return;
 
 recognition = new SpeechRecognition();
 
-recognition.lang="zh-CN";
+recognition.lang="en-US";
 
 recognition.continuous=true;
 
@@ -3349,248 +3026,173 @@ showResult();
 // =======================
 
 
-function checkAnswer(text){
+function checkAnswer(text) {
+    if (isChecking) {
+        return;
+    }
 
-if(isChecking){
-return;
+    isChecking = true;
+
+    if (!words[current]) {
+        isChecking = false;
+        return;
+    }
+
+    // 标准化马来文：统一大小写、标点和空格
+    function normalizeMalay(value) {
+        return String(value || "")
+            .toLowerCase()
+            .replace(/[.,!?;:"“”‘’()[\]{}]/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
+    const answer = normalizeMalay(words[current]);
+    const cleanText = normalizeMalay(text);
+
+    console.log("学生读出的内容:", cleanText);
+    console.log("目标词汇:", answer);
+
+    // 没有识别到语音，不直接判对
+    if (!cleanText || !answer) {
+        isChecking = false;
+        resultDiv.innerHTML = "❌ 没有听清楚，请再试一次";
+        return;
+    }
+
+    
+    // ===== 马来文宽松发音判断 =====
+
+    const targetCompact = answer.replace(/\s+/g, "");
+    const spokenTokens = cleanText.split(/\s+/).filter(Boolean);
+    const targetTokenCount = answer.split(/\s+/).length;
+
+    let similarity = 0;
+
+    // 忽略空格，例如：
+    // dikitar 和 di kitar 可以视为相同
+    // alam sekitar 和 alamsekitar 可以视为相同
+    if (
+        targetCompact.length >= 5 &&
+        spokenTokens.join("").includes(targetCompact)
+    ) {
+        similarity = 1;
+    }
+
+    // 比较连续词组，允许 Chrome 把一个词拆成两个词
+    // 或把两个词识别成相近的连续词
+    for (
+        let start = 0;
+        start < spokenTokens.length;
+        start++
+    ) {
+        for (
+            let count = Math.max(1, targetTokenCount - 1);
+            count <= targetTokenCount + 1;
+            count++
+        ) {
+            if (start + count > spokenTokens.length) {
+                continue;
+            }
+
+            const spokenCandidate = spokenTokens
+                .slice(start, start + count)
+                .join("")
+                .replace(/[^a-z]/g, "");
+
+            if (!spokenCandidate) {
+                continue;
+            }
+
+            const maxLength = Math.max(
+                targetCompact.length,
+                spokenCandidate.length
+            );
+
+            const distance = levenshtein(
+                targetCompact,
+                spokenCandidate
+            );
+
+            const wordSimilarity =
+                1 - distance / maxLength;
+
+            if (wordSimilarity > similarity) {
+                similarity = wordSimilarity;
+            }
+        }
+    }
+
+    // 更宽松的判断标准
+    let threshold;
+
+    if (targetCompact.length <= 3) {
+        threshold = 0.90;
+    } else if (targetCompact.length <= 7) {
+        threshold = 0.72;
+    } else {
+        threshold = 0.70;
+    }
+
+    console.log("学生识别结果:", cleanText);
+    console.log("目标词汇:", answer);
+    console.log("相似度:", similarity);
+    console.log("判断标准:", threshold);
+
+
+    if (similarity >= threshold) {
+        // ===== 答对 =====
+        stopListening();
+        isChecking = false;
+
+        correct++;
+
+        updateBattleFirebase();
+
+        testedWordsToday.push({
+            word: words[current],
+            result: "correct"
+        });
+
+        // 从不会读的词汇列表移除
+        wrongWords = wrongWords.filter(
+            word => word !== words[current]
+        );
+
+        document.body.className = "correct";
+        resultDiv.innerHTML = "✅ 正确！";
+
+        setTimeout(() => {
+            current++;
+
+            if (current < words.length) {
+                showWord();
+            } else {
+                showResult();
+            }
+        }, 800);
+
+    } else {
+        // ===== 答错：允许学生重读 =====
+        isChecking = false;
+
+        const currentWord = words[current];
+
+        const exist = testedWordsToday.find(
+            item => item.word === currentWord
+        );
+
+        if (!exist) {
+            testedWordsToday.push({
+                word: currentWord,
+                result: "wrong"
+            });
+        }
+
+        document.body.className = "incorrect";
+        resultDiv.innerHTML = "❌ 再试一次";
+    }
 }
-
-isChecking = true;
-
-if(!words[current]){
-isChecking = false;
-return;
-}
-
-const answer = normalizeChinese(words[current]);
-
-const cleanText = normalizeChinese(text);
-
-
-// =======================
-// 棱柱体 / 棱锥体 语音识别修正
-// =======================
-
-const specialFix = {
-
-"冷柱体":"棱柱体",
-"人柱体":"棱柱体",
-"能柱体":"棱柱体",
-
-"冷锥体":"棱锥体",
-"人锥体":"棱锥体",
-"能锥体":"棱锥体",
-
-"只是":"指示",
-
-"栗子":"例子",
-"粒子":"例子",
-"荔枝":"例子",
-
-"想像":"想象",
-
-"热漆":"日期"
-
-};
-
-
-let fixedText = cleanText;
-
-for(let wrong in specialFix){
-
-if(cleanText.includes(wrong)){
-
-fixedText = specialFix[wrong];
-break;
-
-}
-
-}
-
-
-console.log(
-"学生:",
-cleanText,
-"答案:",
-answer
-);
-
-
-let similarity;
-
-
-// ⭐ 只要学生读出的内容包含题目，就算正确
-if(cleanText.includes(answer)){
-
-similarity = 1;
-
-}
-
-
-// ⭐ 有什么 / 由什么 互相接受
-else if(
-(answer === "有什么" && fixedText === "由什么") ||
-(answer === "由什么" && fixedText === "有什么")
-){
-
-similarity = 1;
-
-}
-
-
-// ⭐ 特别处理：棱柱体 / 棱锥体
-else if(answer === "棱柱体" && fixedText.includes("柱体")){
-
-similarity = 1;
-
-}
-
-else if(answer === "棱锥体" && fixedText.includes("锥体")){
-
-similarity = 1;
-
-}
-
-
-// ⭐ 原本单字规则
-else if(answer.length === 1 && cleanText.includes(answer)){
-
-similarity = 1;
-
-}
-
-else{
-
-similarity = chineseSimilarity(
-fixedText,
-answer
-);
-
-}
-
-console.log(
-"中文相似度:",
-similarity
-);
-
-// 中文判断标准
-let threshold = 0.75;
-
-// 如果是非常短的单字
-if(answer.length === 1){
-
-threshold = 0.7;
-
-}
-
-// 两个字的词
-else if(answer.length === 2){
-
-threshold = 0.75;
-
-}
-
-// 三个或以上
-else{
-
-threshold = 0.70;
-
-}
-
-
-if(similarity >= threshold){
-
-stopListening();
-
-isChecking = false;
-
-correct++;
-
-updateBattleFirebase();
-
-testedWordsToday.push({
-
-word: words[current],
-
-result:"correct"
-
-});
-
-
-    // 加这里
-    wrongWords = wrongWords.filter(
-        word => word !== words[current]
-    );
-
-document.body.className =
-"correct";
-
-resultDiv.innerHTML =
-"✅ 正确！";
-
-
-setTimeout(()=>{
-
-current++;
-
-if(current < words.length){
-
-showWord();
-
-}
-
-else{
-
-showResult();
-
-}
-
-},800);
-
-
-}
-
-else{
-
-isChecking = false;
-
-const currentWord =
-words[current];
-
-
-const exist =
-testedWordsToday.find(
-x => x.word === currentWord
-);
-
-
-if(!exist){
-
-testedWordsToday.push({
-
-word: currentWord,
-
-result:"wrong"
-
-});
-
-}
-
-document.body.className =
-"incorrect";
-
-
-resultDiv.innerHTML =
-"❌ 再试一次";
-
-}
-
-}
-
-
-
-
-
 
 // =======================
 // 过滤重复
