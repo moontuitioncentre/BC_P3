@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>听写练习（English）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100vh; background-color: #f0f0f0;
+    }
+    .container {
+      text-align: center; padding: 20px; background: #fff; border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,.1); max-width: 720px; width: 92%;
+    }
+    .question { font-size: 28px; margin-bottom: 10px; }
+    .word { font-size: 34px; margin-bottom: 16px; }
+    .btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 14px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-box input {
+  font-size: 18px;
+  padding: 8px 12px;
+  width: 180px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.btn.search-btn {
+  background-color: #008cff;
+}
+
+    .btn {
+      font-size: 18px; padding: 10px 20px; border: none; border-radius: 8px;
+      background-color: #dc3545; color: #fff; cursor: pointer;
+    }
+    .btn.secondary { background-color: #6c757d; }
+    .btn.info { background-color: #dc3545; }
+    .btn.success { background-color: #dc3545; }
+    .btn.warning { background-color: #ffc107; color: #000; }
+    .meaning {
+      margin-top: 10px; font-size: 20px; background: #f8f9fa; border-radius: 8px;
+      padding: 12px; min-height: 60px; line-height: 1.6; white-space: pre-wrap;
+    }
+
+  .test-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.test-btn {
+  font-size: 18px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.reading-btn {
+  background-color: #007bff;
+}
+
+.meaning-btn {
+  background-color: #28a745;
+}
+
+.test-btn:hover {
+  opacity: 0.85;
+}
+
+.set-selector {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.set-selector select {
+  font-size: 18px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="set-selector">
+  <label for="setSelect">选择词汇 Set：</label>
+  <select id="setSelect" onchange="changeSet()">
+  <option value="Set 1">Set 1</option>
+  <option value="Set 2">Set 2</option>
+  <option value="Set 3">Set 3</option>
+</select>
+</div>
+
+    <div class="search-box">
+  <input 
+  type="text" 
+  id="searchInput" 
+  placeholder=""
+  onkeydown="if(event.key === 'Enter') searchWord();"
+>
+
+  <button 
+    class="btn search-btn" 
+    onclick="searchWord()">
+    Search
+  </button>
+</div>
+    <div class="question" id="question">题目 1</div>
+    <div class="word" id="word">—</div>
+    
+    <div class="btns">
+      <!-- 华文优先 -->
+       <div class="btn-row">
+      <button class="btn" onclick="playEnglishWord()">🔊</button>
+      <button class="btn success" onclick="playMalayWord()">Bahasa Melayu</button>
+      <button class="btn info" onclick="showChinese()">华文</button>
+      </div>
+
+      <div class="btn-row">
+      <button class="btn warning" onclick="showEnglishSentence()">Sentence</button>
+      <button class="btn warning" onclick="showMalaySentence()">Bina Ayat</button>      
+      <button class="btn warning" onclick="showChineseSentence()">造句</button>
+      
+      </div>
+
+      <div class="btn-row">
+      <button class="btn secondary" onclick="prevWord()">上一题</button>
+      <button class="btn secondary" onclick="nextWord()">下一题</button>
+      </div>
+
+</div>
+
+    <div class="meaning" id="meaning"></div>
+
+    <div class="test-buttons">
+  <button class="test-btn reading-btn" onclick="goToReadingTest()">
+    测试阅读
+  </button>
+
+  <button class="test-btn meaning-btn" onclick="goToMeaningTest()">
+    测试意思
+  </button>
+</div>
+
+  </div>
+
+  <script>
+    // ====== 词库 ======
+    const zh = [
+      "-",
+  "一个",
+  "和",
+  "是",
+  "在……里",
+  "得到",
+  "我的",
+  "我",
+  "非常",
+  "最喜欢的",
+  "好的",
+  "你的",
+  "它",
+  "看",
+  "在",
+  "日期",
+  "是",
+  "喜欢",
+  "在……上",
+  "有限的",
+  "听",
+  "到",
+  "写",
+  "有",
+  "名字",
+  "你",
+  "词语",
+  "读",
+  "玩具",
+  "它是",
+  "是什么",
+  "正确",
+  "他的",
+  "和……一起",
+  "我们",
+  "她的",
+  "没有",
+  "图片",
+  "这个",
+  "课本",
+  "我已经",
+  "或者",
+  "什么",
+  "表演",
+  "由",
+  "英文",
+  "我是",
+  "铅笔",
+  "年",
+  "的",
+  "是的",
+  "图片",
+  "一个",
+  "已检查",
+  "签名",
+  "颜色",
+  "任何",
+  "还没有",
+  "书桌",
+  "优秀",
+  "课",
+  "水平",
+  "旧的",
+  "单元",
+  "他",
+  "圈出",
+  "阅读",
+  "说",
+  "标准",
+  "答案",
+  "句子",
+  "老师的",
+  "不是",
+  "红色",
+  "模块",
+  "宠物",
+  "书包",
+  "绿色",
+  "书",
+  "猫",
+  "数字",
+  "请",
+  "在……下面",
+  "不要",
+  "画",
+  "玩",
+  "匹配",
+  "朋友",
+  "她",
+  "蓝色",
+  "有",
+  "学校",
+  "苹果",
+  "为了",
+  "披萨",
+  "展示",
+  "说话",
+  "怎样",
+  "写作",
+  "那里"
+    ];
+
+    const py = [
+  "-",
+  "yī gè",
+  "hé",
+  "shì",
+  "zài……lǐ",
+  "dé dào",
+  "wǒ de",
+  "wǒ",
+  "fēi cháng",
+  "zuì xǐ huān de",
+  "hǎo de",
+  "nǐ de",
+  "tā",
+  "kàn",
+  "zài",
+  "rì qī",
+  "shì",
+  "xǐ huān",
+  "zài……shàng",
+  "yǒu xiàn de",
+  "tīng",
+  "dào",
+  "xiě",
+  "yǒu",
+  "míng zi",
+  "nǐ",
+  "cí yǔ",
+  "dú",
+  "wán jù",
+  "tā shì",
+  "shì shén me",
+  "zhèng què",
+  "tā de",
+  "hé……yī qǐ",
+  "wǒ men",
+  "tā de",
+  "méi yǒu",
+  "tú piàn",
+  "zhè gè",
+  "kè běn",
+  "wǒ yǐ jīng",
+  "huò zhě",
+  "shén me",
+  "biǎo yǎn",
+  "yóu",
+  "yīng wén",
+  "wǒ shì",
+  "qiān bǐ",
+  "nián",
+  "de",
+  "shì de",
+  "tú piàn",
+  "yī gè",
+  "yǐ jiǎn chá",
+  "qiān míng",
+  "yán sè",
+  "rèn hé",
+  "hái méi yǒu",
+  "shū zhuō",
+  "yōu xiù",
+  "kè",
+  "shuǐ píng",
+  "jiù de",
+  "dān yuán",
+  "tā",
+  "quān chū",
+  "yuè dú",
+  "shuō",
+  "biāo zhǔn",
+  "dá àn",
+  "jù zi",
+  "lǎo shī de",
+  "bù shì",
+  "hóng sè",
+  "mó kuài",
+  "chǒng wù",
+  "shū bāo",
+  "lǜ sè",
+  "shū",
+  "māo",
+  "shù zì",
+  "qǐng",
+  "zài……xià miàn",
+  "bù yào",
+  "huà",
+  "wán",
+  "pǐ pèi",
+  "péng you",
+  "tā",
+  "lán sè",
+  "yǒu",
+  "xué xiào",
+  "píng guǒ",
+  "wèi le",
+  "pī sà",
+  "zhǎn shì",
+  "shuō huà",
+  "zěn yàng",
+  "xiě zuò",
+  "nà lǐ"
+];
+
+    const en = [
+      "the",
+  "a",
+  "and",
+  "is",
+  "in",
+  "got",
+  "my",
+  "i",
+  "very",
+  "favourite",
+  "good",
+  "your",
+  "it",
+  "look",
+  "at",
+  "date",
+  "are",
+  "like",
+  "on",
+  "limited",
+  "listen",
+  "to",
+  "write",
+  "have",
+  "name",
+  "you",
+  "words",
+  "read",
+  "toy",
+  "it's",
+  "what's",
+  "correct",
+  "his",
+  "with",
+  "we",
+  "her",
+  "no",
+  "pictures",
+  "this",
+  "textbook",
+  "i've",
+  "or",
+  "what",
+  "performance",
+  "by",
+  "english",
+  "i'm",
+  "pencil",
+  "year",
+  "of",
+  "yes",
+  "picture",
+  "an",
+  "checked",
+  "signature",
+  "colour",
+  "any",
+  "haven't",
+  "desk",
+  "excellent",
+  "lesson",
+  "level",
+  "old",
+  "unit",
+  "he",
+  "circle",
+  "reading",
+  "say",
+  "standard",
+  "answer",
+  "sentences",
+  "teacher's",
+  "isn't",
+  "red",
+  "module",
+  "pet",
+  "bag",
+  "green",
+  "book",
+  "cat",
+  "number",
+  "please",
+  "under",
+  "don't",
+  "draw",
+  "play",
+  "match",
+  "friends",
+  "she",
+  "blue",
+  "has",
+  "school",
+  "apple",
+  "for",
+  "pizza",
+  "show",
+  "speaking",
+  "how",
+  "writing",
+  "there"
+    ];
+
+    const ms = [
+"-",
+  "satu",
+  "dan",
+  "ialah",
+  "di dalam",
+  "dapat",
+  "saya punya",
+  "saya",
+  "sangat",
+  "kegemaran",
+  "baik",
+  "kamu punya",
+  "ia",
+  "lihat",
+  "di",
+  "tarikh",
+  "ialah",
+  "suka",
+  "di atas",
+  "terhad",
+  "dengar",
+  "ke",
+  "tulis",
+  "ada",
+  "nama",
+  "kamu",
+  "perkataan",
+  "baca",
+  "mainan",
+  "ia ialah",
+  "apa itu",
+  "betul",
+  "dia punya",
+  "dengan",
+  "kami",
+  "dia punya",
+  "tiada",
+  "gambar",
+  "ini",
+  "buku teks",
+  "saya sudah",
+  "atau",
+  "apa",
+  "persembahan",
+  "oleh",
+  "Bahasa Inggeris",
+  "saya ialah",
+  "pensel",
+  "tahun",
+  "daripada",
+  "ya",
+  "gambar",
+  "satu",
+  "telah diperiksa",
+  "tandatangan",
+  "warna",
+  "apa-apa",
+  "belum",
+  "meja tulis",
+  "cemerlang",
+  "pelajaran",
+  "tahap",
+  "lama",
+  "unit",
+  "dia",
+  "bulatkan",
+  "bacaan",
+  "cakap",
+  "standard",
+  "jawapan",
+  "ayat",
+  "cikgu punya",
+  "bukan",
+  "merah",
+  "modul",
+  "haiwan peliharaan",
+  "beg",
+  "hijau",
+  "buku",
+  "kucing",
+  "nombor",
+  "sila",
+  "di bawah",
+  "jangan",
+  "lukis",
+  "bermain",
+  "padankan",
+  "kawan",
+  "dia",
+  "biru",
+  "ada",
+  "sekolah",
+  "epal",
+  "untuk",
+  "piza",
+  "tunjuk",
+  "bercakap",
+  "bagaimana",
+  "penulisan",
+  "di sana"
+];
+
+    const zhSentences = [
+      "这只猫很可爱。",
+  "我有一本书。",
+  "我喜欢苹果和香蕉。",
+  "她是我的朋友。",
+  "猫在盒子里。",
+  "我得到了一份礼物。",
+  "这是我的书包。",
+  "我喜欢吃饭。",
+  "这食物非常好。",
+  "这是我最喜欢的食物。",
+  "这食物很好。",
+  "这是你的书。",
+  "它是一只猫。",
+  "请看图片。",
+  "书在家里。",
+  "今天是几月几日？",
+  "他们很开心。",
+  "我喜欢披萨。",
+  "书在桌子上。",
+  "这本书数量有限。",
+  "听我说。",
+  "我去学校。",
+  "我写一封信。",
+  "我有一支笔。",
+  "我的名字是阿里。",
+  "你是我的朋友。",
+  "我学新词语。",
+  "我读一本书。",
+  "这是我的玩具。",
+  "它是一个红色的球。",
+  "你叫什么名字？",
+  "这个答案是正确的。",
+  "这是他的书。",
+  "跟我来。",
+  "我们很开心。",
+  "这是她的书包。",
+  "不，谢谢。",
+  "我画画。",
+  "这是我的书。",
+  "这是我的课本。",
+  "我有一支笔。",
+  "这个还是那个？",
+  "这是什么？",
+  "这个表演很好。",
+  "这本书是阿里写的。",
+  "我学英文。",
+  "我是学生。",
+  "这是我的铅笔。",
+  "今年很好。",
+  "这是一盒玩具。",
+  "是的，请。",
+  "这是一张图片。",
+  "我有一个苹果。",
+  "这个已经检查了。",
+  "请签名。",
+  "我给图片上色。",
+  "你有什么食物吗？",
+  "我没有笔。",
+  "书在书桌上。",
+  "你的作品很优秀。",
+  "这是我的课。",
+  "这是第一级。",
+  "我的书包很旧。",
+  "这是第一单元。",
+  "他是我的朋友。",
+  "圈出答案。",
+  "我喜欢阅读。",
+  "说出你的名字。",
+  "这是标准。",
+  "这是答案。",
+  "我写句子。",
+  "这是老师的书。",
+  "这不是我的书包。",
+  "球是红色的。",
+  "这是第一模块。",
+  "我有一只宠物。",
+  "这是我的书包。",
+  "球是绿色的。",
+  "这是我的书。",
+  "这只猫很可爱。",
+  "这是第一号。",
+  "请坐下。",
+  "猫在桌子下面。",
+  "我不喜欢它。",
+  "我画一只猫。",
+  "我踢足球。",
+  "把词语匹配起来。",
+  "他们是我的朋友。",
+  "她是我的朋友。",
+  "球是蓝色的。",
+  "她有一只猫。",
+  "我去学校。",
+  "这是一个苹果。",
+  "这是给你的。",
+  "我喜欢披萨。",
+  "给我看你的书。",
+  "我喜欢说话。",
+  "你好吗？",
+  "我喜欢写作。",
+  "有一只猫。"
+    ];
+
+    const enSentences = [
+      "The cat is cute.",
+  "I have a book.",
+  "I like apples and bananas.",
+  "She is my friend.",
+  "The cat is in the box.",
+  "I got a gift.",
+  "This is my bag.",
+  "I like rice.",
+  "The food is very good.",
+  "This is my favourite food.",
+  "The food is good.",
+  "This is your book.",
+  "It is a cat.",
+  "Look at the picture.",
+  "The book is at home.",
+  "What is the date today?",
+  "They are happy.",
+  "I like pizza.",
+  "The book is on the table.",
+  "This book is limited.",
+  "Listen to me.",
+  "I go to school.",
+  "I write a letter.",
+  "I have a pen.",
+  "My name is Ali.",
+  "You are my friend.",
+  "I learn new words.",
+  "I read a book.",
+  "This is my toy.",
+  "It's a red ball.",
+  "What's your name?",
+  "This answer is correct.",
+  "This is his book.",
+  "Come with me.",
+  "We are happy.",
+  "This is her bag.",
+  "No, thank you.",
+  "I draw pictures.",
+  "This is my book.",
+  "This is my textbook.",
+  "I've got a pen.",
+  "This or that?",
+  "What is this?",
+  "The performance is good.",
+  "This book is by Ali.",
+  "I learn English.",
+  "I'm a student.",
+  "This is my pencil.",
+  "This year is good.",
+  "This is a box of toys.",
+  "Yes, please.",
+  "This is a picture.",
+  "I have an apple.",
+  "This is checked.",
+  "Please sign the signature.",
+  "I colour the picture.",
+  "Do you have any food?",
+  "I haven't got a pen.",
+  "The book is on the desk.",
+  "Your work is excellent.",
+  "This is my lesson.",
+  "This is level one.",
+  "My bag is old.",
+  "This is unit one.",
+  "He is my friend.",
+  "Circle the answer.",
+  "I like reading.",
+  "Say your name.",
+  "This is the standard.",
+  "This is the answer.",
+  "I write sentences.",
+  "This is the teacher's book.",
+  "It isn't my bag.",
+  "The ball is red.",
+  "This is module one.",
+  "I have a pet.",
+  "This is my bag.",
+  "The ball is green.",
+  "This is my book.",
+  "The cat is cute.",
+  "This is number one.",
+  "Please sit down.",
+  "The cat is under the table.",
+  "I don't like it.",
+  "I draw a cat.",
+  "I play football.",
+  "Match the words.",
+  "They are my friends.",
+  "She is my friend.",
+  "The ball is blue.",
+  "She has a cat.",
+  "I go to school.",
+  "This is an apple.",
+  "This is for you.",
+  "I like pizza.",
+  "Show me your book.",
+  "I like speaking.",
+  "How are you?",
+  "I like writing.",
+  "There is a cat."
+    ];
+
+    const msSentences = [
+      "Kucing itu comel.",
+  "Saya ada sebuah buku.",
+  "Saya suka epal dan pisang.",
+  "Dia ialah kawan saya.",
+  "Kucing itu di dalam kotak.",
+  "Saya dapat satu hadiah.",
+  "Ini ialah beg saya.",
+  "Saya suka makan nasi.",
+  "Makanan ini sangat sedap.",
+  "Ini ialah makanan kegemaran saya.",
+  "Makanan ini sedap.",
+  "Ini ialah buku kamu.",
+  "Ia ialah seekor kucing.",
+  "Lihat gambar itu.",
+  "Buku itu di rumah.",
+  "Apakah tarikh hari ini?",
+  "Mereka gembira.",
+  "Saya suka piza.",
+  "Buku itu di atas meja.",
+  "Buku ini terhad.",
+  "Dengar saya.",
+  "Saya pergi ke sekolah.",
+  "Saya menulis sepucuk surat.",
+  "Saya ada sebatang pen.",
+  "Nama saya Ali.",
+  "Kamu ialah kawan saya.",
+  "Saya belajar perkataan baharu.",
+  "Saya membaca sebuah buku.",
+  "Ini ialah mainan saya.",
+  "Ia ialah sebiji bola merah.",
+  "Siapa nama kamu?",
+  "Jawapan ini betul.",
+  "Ini ialah buku dia.",
+  "Mari dengan saya.",
+  "Kami gembira.",
+  "Ini ialah beg dia.",
+  "Tidak, terima kasih.",
+  "Saya melukis gambar.",
+  "Ini ialah buku saya.",
+  "Ini ialah buku teks saya.",
+  "Saya ada sebatang pen.",
+  "Ini atau itu?",
+  "Apa ini?",
+  "Persembahan ini bagus.",
+  "Buku ini ditulis oleh Ali.",
+  "Saya belajar Bahasa Inggeris.",
+  "Saya seorang murid.",
+  "Ini ialah pensel saya.",
+  "Tahun ini bagus.",
+  "Ini ialah sekotak mainan.",
+  "Ya, sila.",
+  "Ini ialah sekeping gambar.",
+  "Saya ada sebiji epal.",
+  "Ini telah diperiksa.",
+  "Sila tandatangan.",
+  "Saya mewarnakan gambar.",
+  "Adakah kamu ada apa-apa makanan?",
+  "Saya tiada pen.",
+  "Buku itu di atas meja tulis.",
+  "Kerja kamu cemerlang.",
+  "Ini ialah pelajaran saya.",
+  "Ini ialah tahap satu.",
+  "Beg saya lama.",
+  "Ini ialah unit satu.",
+  "Dia ialah kawan saya.",
+  "Bulatkan jawapan.",
+  "Saya suka membaca.",
+  "Sebut nama kamu.",
+  "Ini ialah standard.",
+  "Ini ialah jawapan.",
+  "Saya menulis ayat.",
+  "Ini ialah buku cikgu.",
+  "Ini bukan beg saya.",
+  "Bola itu merah.",
+  "Ini ialah modul satu.",
+  "Saya ada seekor haiwan peliharaan.",
+  "Ini ialah beg saya.",
+  "Bola itu hijau.",
+  "Ini ialah buku saya.",
+  "Kucing itu comel.",
+  "Ini ialah nombor satu.",
+  "Sila duduk.",
+  "Kucing itu di bawah meja.",
+  "Saya tidak suka.",
+  "Saya melukis seekor kucing.",
+  "Saya bermain bola sepak.",
+  "Padankan perkataan.",
+  "Mereka ialah kawan saya.",
+  "Dia ialah kawan saya.",
+  "Bola itu biru.",
+  "Dia ada seekor kucing.",
+  "Saya pergi ke sekolah.",
+  "Ini ialah sebiji epal.",
+  "Ini untuk kamu.",
+  "Saya suka piza.",
+  "Tunjukkan buku kamu kepada saya.",
+  "Saya suka bercakap.",
+  "Apa khabar?",
+  "Saya suka menulis.",
+  "Ada seekor kucing."
+    ];
+
+    // ===== Set 词库管理 =====
+const wordSets = {
+  "Set 1": {
+    zh: zh,
+    py: py,
+    en: en,
+    ms: ms,
+    zhSentences: zhSentences,
+    enSentences: enSentences,
+    msSentences: msSentences
+  },
+
+  "Set 2": {
+    zh: ["同学", "朋友", "辛辣"],
+    py: ["tóng xué", "péng you", "xīn là"],
+    en: ["classmate", "friend", "spicy"],
+    ms: ["rakan sekelas", "kawan", "pedas"],
+    zhSentences: [
+      "我的同学很友善。",
+      "他是我的好朋友。",
+      "我不喜欢吃辛辣的食物。"
+    ],
+    enSentences: [
+      "My classmate is friendly.",
+      "He is my good friend.",
+      "I do not like spicy food."
+    ],
+    msSentences: [
+      "Rakan sekelas saya sangat baik.",
+      "Dia ialah kawan baik saya.",
+      "Saya tidak suka makan makanan yang pedas."
+    ]
+  },
+
+  "Set 3": {
+    zh: ["篮球", "老师", "学校"],
+    py: ["lán qiú", "lǎo shī", "xué xiào"],
+    en: ["basketball", "teacher", "school"],
+    ms: ["bola keranjang", "guru", "sekolah"],
+    zhSentences: [
+      "我喜欢打篮球。",
+      "我的老师很亲切。",
+      "我每天去学校上课。"
+    ],
+    enSentences: [
+      "I like playing basketball.",
+      "My teacher is very kind.",
+      "I go to school every day."
+    ],
+    msSentences: [
+      "Saya suka bermain bola keranjang.",
+      "Guru saya sangat baik hati.",
+      "Saya pergi ke sekolah setiap hari."
+    ]
+  }
+};
+
+let activeSet = wordSets["Set 1"];
+
+    // ===== DOM & 语音 =====
+    let currentIndex = 0;
+    const questionDiv = document.getElementById('question');
+    const wordDiv = document.getElementById('word');
+    const meaningDiv = document.getElementById('meaning');
+
+    function setMeaning(text) { meaningDiv.textContent = text || ''; }
+
+    // 统一的朗读函数（默认：慢速 0.4、音高 0.6）
+    function speak(text, lang, preferNames = [], rate = 0.4, pitch = 0.6) {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = rate;
+      u.pitch = pitch;
+
+      const trySpeak = () => {
+        const voices = speechSynthesis.getVoices() || [];
+        let candidates = voices.filter(v => (v.lang || '').toLowerCase().startsWith(lang.toLowerCase()));
+        // 如果没有马来语，回退印尼语
+        if (!candidates.length && lang.toLowerCase().startsWith('ms')) {
+          candidates = voices.filter(v => (v.lang || '').toLowerCase().startsWith('id'));
+          if (candidates.length) u.lang = 'id-ID';
+        }
+        for (const key of preferNames) {
+          const found = candidates.find(v => (v.name || '').toLowerCase().includes(key.toLowerCase()));
+          if (found) { u.voice = found; break; }
+        }
+        if (!u.voice && candidates.length) u.voice = candidates[0];
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      };
+
+      if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.onvoiceschanged = trySpeak;
+      }
+      trySpeak();
+    }
+
+    // ===== 华文为主（按钮函数不再覆盖速率/音高）=====
+    function playChineseWord() {
+  const text = activeSet.zh[currentIndex] || '';
+  const pinyin = activeSet.py[currentIndex] || '';
+
+  setMeaning(pinyin);
+
+  speak(text, 'zh-CN', ['Xiaoyi','Microsoft']);
+}
+
+    function showEnglish() {
+      const text = activeSet.en[currentIndex] || '(待添加英文)';
+      setMeaning(text);
+      speak(text, 'en-US', ['Google','Microsoft','Natural']);
+    }
+
+    function playMalayWord(){
+
+const text = activeSet.ms[currentIndex] || '';
+
+setMeaning(text);
+
+speak(
+text,
+'ms-MY',
+['Microsoft','Malay','Bahasa']
+);
+
+}
+
+    function showChineseSentence() {
+      const text = activeSet.zhSentences[currentIndex] || '(待添加华文造句)';
+      setMeaning(text);
+      speak(text, 'zh-CN', ['Xiaoyi','Microsoft']);
+    }
+
+    function showEnglishSentence() {
+      const text = activeSet.enSentences[currentIndex] || '(待添加英文句子)';
+      setMeaning(text);
+      speak(text, 'en-US', ['Google','Microsoft','Natural']);
+    }
+
+    function showMalaySentence() {
+      const text = activeSet.msSentences[currentIndex] || '(待添加马来文句子)';
+      setMeaning(text);
+      speak(text, 'ms-MY', ['Rizwan','Microsoft','Malay','Bahasa']);
+    }
+
+    function nextWord() {
+
+if(currentIndex < activeSet.en.length - 1){
+
+currentIndex++;
+
+updateQuestion();
+
+}
+
+}
+
+    function prevWord(){
+
+if(currentIndex > 0){
+
+currentIndex--;
+
+updateQuestion();
+
+}
+
+}
+
+    function updateQuestion() {
+  questionDiv.innerText = `题目 ${currentIndex + 1}`;
+  wordDiv.innerText = activeSet.en[currentIndex] || '—';
+  setMeaning('');
+}
+
+
+// ===== 搜索功能 =====
+function searchWord() {
+
+  const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+
+  if (!keyword) {
+    alert("请输入要搜索的词语");
+    return;
+  }
+
+
+  const index = activeSet.en.findIndex(word => 
+word.toLowerCase() === keyword
+);
+
+
+  if (index !== -1) {
+
+    currentIndex = index;
+    updateQuestion();
+
+  } else {
+
+    alert("没有找到：" + keyword);
+
+  }
+
+}
+
+function showChinese(){
+
+const text = activeSet.zh[currentIndex] || '';
+
+setMeaning(text);
+
+speak(
+text,
+'zh-CN',
+['Xiaoyi','Microsoft']
+);
+
+}
+
+function playEnglishWord(){
+
+const text = activeSet.en[currentIndex] || '';
+
+setMeaning('');
+
+speak(
+text,
+'en-US',
+['Google','Microsoft','Natural']
+);
+
+}
+
+function goToReadingTest() {
+  const selectedSet = document.getElementById("setSelect").value;
+
+  window.location.href = `Reading/ReadingTest${selectedSet.replace("Set ", "Set")}.html`;
+}
+
+function goToMeaningTest() {
+  const selectedSet = document.getElementById("setSelect").value;
+
+  window.location.href = `Meaning/MeaningTest${selectedSet.replace("Set ", "Set")}.html`;
+}
+
+function changeSet() {
+  const selectedSet = document.getElementById("setSelect").value;
+
+  if (!wordSets[selectedSet]) return;
+
+  activeSet = wordSets[selectedSet];
+
+  currentIndex = 0;
+  updateQuestion();
+}
+
+updateQuestion();
+  </script>
+</body>
+</html>
