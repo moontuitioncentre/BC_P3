@@ -3049,6 +3049,47 @@ function checkAnswer(text) {
     const answer = normalizeMalay(words[current]);
     const cleanText = normalizeMalay(text);
 
+    // ===== 英文缩写特殊处理 =====
+const target = answer.replace(/[^a-z]/g, "");
+const spoken = cleanText.replace(/[^a-z]/g, "");
+
+// 例如：I'm 可以接受 I'm 或 I am
+if (
+    target === "im" &&
+    (spoken.includes("im") || spoken.includes("iam"))
+) {
+    stopListening();
+    isChecking = false;
+
+    correct++;
+    updateBattleFirebase();
+
+    testedWordsToday.push({
+        word: words[current],
+        result: "correct"
+    });
+
+    wrongWords = wrongWords.filter(
+        word => word !== words[current]
+    );
+
+    document.body.className = "correct";
+    resultDiv.innerHTML = "✅ 正确！";
+
+    setTimeout(() => {
+        current++;
+
+        if (current < words.length) {
+            showWord();
+        } else {
+            showResult();
+        }
+    }, 800);
+
+    return;
+}
+
+
     console.log("学生读出的内容:", cleanText);
     console.log("目标词汇:", answer);
 
